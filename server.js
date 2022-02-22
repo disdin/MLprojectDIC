@@ -1,4 +1,3 @@
-
 // Importing all required modules
 import express from "express";
 import bodyParser from "body-parser";
@@ -51,7 +50,7 @@ app.use(express.static("public")); //static files in public directory
 app.use(limiter);
 app.use(helmet());
 
-app.use('/', router);
+// app.use('/', router);
 
 
 // using multiple CPU cores to boost speed
