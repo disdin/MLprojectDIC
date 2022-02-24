@@ -2,15 +2,18 @@
 import express from "express";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-// import Connection from "./database/db.js";
+import Connection from "./database/DB.js";
 import rateLimit from "express-rate-limit";
-// import hsts from "hsts";
-// import { router } from "./routes.js";
+import hsts from "hsts";
+import { router } from "./router.js";
 import path from "path";
 import { fileURLToPath } from 'url';
 import helmet from "helmet";
 import cluster from "cluster";
 import os from "os";
+
+import importData from "./Controllers/importData.js";
+import signin from "./Controllers/signin.js";
 
 dotenv.config();
 
@@ -36,11 +39,11 @@ const limiter = rateLimit({
 
 
 //declaring port and database url
-const port = process.env.PORT || 3000;
-// const username = process.env.DB_USERNAME;
-// const password = process.env.DB_PASSWORD;
-// const url = `mongodb+srv://${username}:${password}@smartforestappcluster.hx2d5.mongodb.net/forestApp_DB?retryWrites=true&w=majority`;
-// Connection(process.env.MONGODB_URI || url);
+const port = process.env.PORT || 5000;
+const username = process.env.DB_USERNAME;
+const password = process.env.DB_PASSWORD;
+const url = `mongodb+srv://${username}:${password}@smartforestappcluster.hx2d5.mongodb.net/MLproject`;
+Connection(process.env.MONGODB_URI || url);
 
 // declaring middleware functions
 app.use(bodyParser.json({ limit: '1mb' }));
@@ -49,9 +52,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public")); //static files in public directory
 app.use(limiter);
 app.use(helmet());
-
-// app.use('/', router);
-
+app.use(hsts({
+  // Limiting payload size
+  maxAge: 31536000,
+  includeSubDomains: true,
+  preload: true
+}));
+app.use('/', router);
 
 // using multiple CPU cores to boost speed
 if (cluster.isMaster) {
