@@ -12,8 +12,8 @@ import helmet from "helmet";
 import cluster from "cluster";
 import os from "os";
 
-import importData from "./Controllers/importData.js";
-import signin from "./Controllers/signin.js";
+// import importData from "./Controllers/importData.js";
+// import signin from "./Controllers/signin.js";
 
 dotenv.config();
 
@@ -27,8 +27,8 @@ const app = express();
 
 // limiting concurrent requests
 const limiter = rateLimit({
-  windowMs: 5 * 1000, // 15 minutes
-  max: 25, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  windowMs: 5 * 1000, 
+  max: 25, // Limit each IP to 100 requests per `window`
   message: {
     code: 429,
     message: 'too many requests'
