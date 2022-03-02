@@ -43,8 +43,25 @@ var deviceRecords = new Schema({
     }
   ],
 });
+var ML_Output=new Schema({
+  deviceId: String,
+  time:Date,
+  dataRange:{
+    start:Number,
+    end:Number
+  },
+  file:{
+    url:String,
+    name:String,
+    version:String,
+    type:String
+  },
+  errorRate:String,
+  accuracy: String  
+})
 
 export default {
   deviceRecords,
-  userSchema
+  userSchema,
+  ML_Output
 };

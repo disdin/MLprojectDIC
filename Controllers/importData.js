@@ -3,6 +3,7 @@ import schema from "../database/schema.js";
 import fs from "fs";
 import { Parser } from "json2csv";
 import converter from "json-2-csv";
+import runModel from "./runModel";
 
 const DeviceRecord = mongoose.model("DeviceRecord", schema.deviceRecords);
 
@@ -48,6 +49,7 @@ export default function importData(req, res) {
               if (err) throw err;
               else {
                 console.log("The file has been saved!");
+                output= runModel("send file");
                 res.status(200).send();
               }
             });
