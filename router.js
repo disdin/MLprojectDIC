@@ -1,6 +1,7 @@
 
 // importing required modules
 import express from "express";
+import importData from "./Controllers/importData.js";
 import signin from "./Controllers/signin.js";
 
 
@@ -15,5 +16,6 @@ router.get("/",(req,res)=>{
 
 // declaring routes
 router.post("/signin", signin);
+router.post("/importData", importData);
 
 export {router};

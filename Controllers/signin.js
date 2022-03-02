@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import schema from "../database/schema.js";
 
-const User = mongoose.model("User", schema);
+const User = mongoose.model("User", schema.userSchema);
 
 function signin(req, res) {
   const { Username, Password, Email } = req.body;

@@ -1,33 +1,69 @@
-import execute from "child_process";
-const exec = execute.exec;
+import mongoose from "mongoose";
+import schema from "../database/schema.js";
+import fs from "fs";
+import { Parser } from "json2csv";
+import converter from "json-2-csv";
 
-const username = process.env.DB_USERNAME;
-const password = process.env.DB_PASSWORD;
 
-const exportParams = "mongoexport --uri mongodb+srv://dicproject:dic12345@smartforestappcluster.hx2d5.mongodb.net/forestApp_DB --collection users --out C:/Users/user/Desktop/userData.json";
+const DeviceRecord = mongoose.model("DeviceRecord", schema.deviceRecords);
 
-//Define the spawn function
-const childSpawn = () => {
-    //Get the export parameters
 
-    // MongoDB dump child process
-    const mongoDump = exec(exportParams, (error, stdout, stderr) => {
-        if(!error){
-            console.log("Imported Successfully");
+export default function importData(req, res){
+
+    const deviceId = req.body.DeviceId;
+
+    DeviceRecord.findOne({"deviceId" : deviceId}, function(err, foundDevice){
+        if(!err){
+            if(foundDevice){
+                const start = foundDevice.first;
+                const end = foundDevice.last;
+                var startIndex, endIndex;
+            // console.log(foundDevice.samples);
+            // DeviceRecord.find({
+            //     "deviceId": deviceId,
+            //     "samples.timeVal" : { $lte: '1645008942682'}
+            // }, function(err, test){
+            //     console.log(test.length);
+            //     for(var i=0; i<test.length; i++){
+            //         console.log(test[i]);
+            //     }
+            // });
+            const dataArray = foundDevice.samples;
+            dataArray.forEach((dataSet, index) => {
+                if(dataSet.timeVal === start){
+                    //console.log(index);
+                    startIndex = index;
+                }
+                if(dataSet.timeVal === end){
+                    //console.log(index);
+                    endIndex = index;
+                }
+            })
+            var requiredDataArray = [];
+            for(var i = startIndex; i<=endIndex; i++)
+                requiredDataArray.push(dataArray[i]);
+            
+            //console.log(requiredDataArray.length);
+            converter.json2csv(requiredDataArray, (err, csv) => {
+                if(err) console.log(err);
+                else {
+                    fs.writeFile('downloads/tempData.csv', csv, (err) => {
+                        if (err) throw err;
+                        console.log('The file has been saved!');
+                      });
+                }
+            });
+            //console.log(csv);
+             
+            
+            }
+            else{
+                console.log("device not found")
+            }
         }
-        if (error) {
-            console.log(error.stack);
-            console.log('Child MONGO Error code: ' + error.code);
-            console.log('Child MONGO Signal received: ' + error.signal);
+        else{
+            console.log(err);
         }
-        console.log('Child MONGO Process STDOUT: ' + stdout);
-        console.log('Child MONGO Process STDERR: ' + stderr);
-        
     });
+}
 
-    mongoDump.on('exit', (code) => {
-        console.log('MONGO Child process exited with exit code ' + code);
-    });
-};
-
-export default childSpawn;

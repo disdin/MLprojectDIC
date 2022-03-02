@@ -22,7 +22,7 @@ var deviceRecords = new Schema({
           name: String,
           unit: String,
           value: String
-        },
+        }, 
         vibrationVal: {
           xaxisVal: mongoose.Decimal128,
           yaxisVal: mongoose.Decimal128,
