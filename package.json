@@ -17,6 +17,7 @@
     "hsts": "^2.2.0",
     "json-2-csv": "^3.17.0",
     "json2csv": "^5.0.7",
+    "mongoose": "^6.2.4",
     "nodemon": "^2.0.15"
   },
   "scripts": {
