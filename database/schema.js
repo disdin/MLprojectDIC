@@ -58,7 +58,8 @@ var ML_Output=new Schema({
   },
   errorRate:String,
   accuracy: String  
-})
+},
+{ typeKey: '$type' });
 
 export default {
   deviceRecords,
