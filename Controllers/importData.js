@@ -9,7 +9,10 @@ const DeviceRecord = mongoose.model("DeviceRecord", schema.deviceRecords);
 
 export default function importData(req, res) {
   const deviceId = req.body.DeviceId;
-
+  const today=new Date();
+  const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  const time = today.getHours() + ':' + (today.getMinutes() + 1) + ':' + today.getSeconds();
+  // console.log(date,"  ",time);
   DeviceRecord.findOne({ deviceId: deviceId }, function (err, foundDevice) {
     if (!err) {
       if (foundDevice) {
@@ -43,13 +46,14 @@ export default function importData(req, res) {
 
         //console.log(requiredDataArray.length);
         converter.json2csv(requiredDataArray, (err, csv) => {
+          
           if (err) console.log(err);
           else {
-            fs.writeFile("downloads/tempData.csv", csv, (err) => {
-              if (err) throw err;
+            fs.writeFile(`downloads/${deviceId}::${date}(${time}).csv`, csv, (err) => {
+              if (err) console.log(err);
               else {
                 console.log("The file has been saved!");
-                runModel("send file");
+                // runModel("send file");
                 res.status(200).send();
               }
             });

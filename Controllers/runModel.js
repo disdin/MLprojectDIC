@@ -20,6 +20,22 @@ export default function runModel(file) {
     // })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // Creating dummy output accuracy variable
         const outputAcc1 = 95;
         const outputAcc2 = 85;
